@@ -335,6 +335,14 @@ func deleteImage(c *cli.Context) error {
 	return nil
 }
 
+// remove prefix v in version
+func removePrefixV(version string) string {
+	if strings.HasPrefix(version, "v") {
+		return version[1:]
+	}
+	return version
+}
+
 func getSortComparisonStrategy(sort string) func(str1, str2 string) bool {
 	var compareStringNumber func(str1, str2 string) bool
 
@@ -346,11 +354,11 @@ func getSortComparisonStrategy(sort string) func(str1, str2 string) bool {
 			if str2 == "latest" {
 				return true
 			}
-			version1, err1 := semver.Make(str1)
+			version1, err1 := semver.Make(removePrefixV(str1))
 			if err1 != nil {
 				fmt.Printf("Error parsing version1: %q\n", err1)
 			}
-			version2, err2 := semver.Make(str2)
+			version2, err2 := semver.Make(removePrefixV(str2))
 			if err2 != nil {
 				fmt.Printf("Error parsing version2: %q\n", err2)
 			}
